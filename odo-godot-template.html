@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='' xml:lang=''>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, user-scalable=no' />
+	<link id='-gd-engine-icon' rel='icon' type='image/png' href='favicon.png' />
+	<title></title>
+	<style type='text/css'>
+
+		body {
+			touch-action: none;
+			margin: 0;
+			border: 0 none;
+			padding: 0;
+			text-align: center;
+			background-color: black;
+		}
+
+		#canvas {
+			display: block;
+			margin: 0;
+			color: white;
+		}
+
+		#canvas:focus {
+			outline: none;
+		}
+
+		.godot {
+			font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+			color: #e0e0e0;
+			background-color: #3b3943;
+			background-image: linear-gradient(to bottom, #403e48, #35333c);
+			border: 1px solid #45434e;
+			box-shadow: 0 0 1px 1px #2f2d35;
+		}
+
+
+		/* Status display
+		 * ============== */
+
+		#status {
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			/* don't consume click events - make children visible explicitly */
+			visibility: hidden;
+		}
+
+		#status-progress {
+			width: 366px;
+			height: 7px;
+			background-color: #38363A;
+			border: 1px solid #444246;
+			padding: 1px;
+			box-shadow: 0 0 2px 1px #1B1C22;
+			border-radius: 2px;
+			visibility: visible;
+		}
+
+		@media only screen and (orientation:portrait) {
+			#status-progress {
+				width: 61.8%;
+			}
+		}
+
+		#status-progress-inner {
+			height: 100%;
+			width: 0;
+			box-sizing: border-box;
+			transition: width 0.5s linear;
+			background-color: #202020;
+			border: 1px solid #222223;
+			box-shadow: 0 0 1px 1px #27282E;
+			border-radius: 3px;
+		}
+
+		#status-indeterminate {
+			visibility: visible;
+			position: relative;
+		}
+
+		#status-indeterminate > div {
+			width: 4.5px;
+			height: 0;
+			border-style: solid;
+			border-width: 9px 3px 0 3px;
+			border-color: #2b2b2b transparent transparent transparent;
+			transform-origin: center 21px;
+			position: absolute;
+		}
+
+		#status-indeterminate > div:nth-child(1) { transform: rotate( 22.5deg); }
+		#status-indeterminate > div:nth-child(2) { transform: rotate( 67.5deg); }
+		#status-indeterminate > div:nth-child(3) { transform: rotate(112.5deg); }
+		#status-indeterminate > div:nth-child(4) { transform: rotate(157.5deg); }
+		#status-indeterminate > div:nth-child(5) { transform: rotate(202.5deg); }
+		#status-indeterminate > div:nth-child(6) { transform: rotate(247.5deg); }
+		#status-indeterminate > div:nth-child(7) { transform: rotate(292.5deg); }
+		#status-indeterminate > div:nth-child(8) { transform: rotate(337.5deg); }
+
+		#status-notice {
+			margin: 0 100px;
+			line-height: 1.3;
+			visibility: visible;
+			padding: 4px 6px;
+			visibility: visible;
+		}
+	</style>
+$GODOT_HEAD_INCLUDE
+</head>
+<body>
+	<canvas id='canvas'>
+		HTML5 canvas appears to be unsupported in the current browser.<br />
+		Please try updating or use a different browser.
+	</canvas>
+	<div id='status'>
+		<div id='status-progress' style='display: none;' oncontextmenu='event.preventDefault();'><div id ='status-progress-inner'></div></div>
+		<div id='status-indeterminate' style='display: none;' oncontextmenu='event.preventDefault();'>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+		<div id='status-notice' class='godot' style='display: none;'></div>
+	</div>
+
+	<script type='text/javascript' src='$GODOT_BASENAME.js'></script>
+	<script type='text/javascript'>//<![CDATA[
+    (function(define) {
+    // Copy the following from unpkg
+    !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e=e||self).ODO={})}(this,(function(e){"use strict";var t={ready:"odo:trigger:ready",finish:"odo:trigger:finish"},n=function(e){return function(t,n){var r;((null===(r=e.ReactNativeWebView)||void 0===r?void 0:r.postMessage)||e.postMessage)(JSON.stringify({event:t,args:n}),"*")}};function r(e){return void 0===e&&(e=1e10),Math.floor(Math.random()*Math.floor(e))}var i=function(e,t){return function(i,s){return new Promise((function(o,a){var u="odo:data:saveResponse:"+r();e.document.addEventListener("message",(function(e){var t=JSON.parse(e.detail);t.event===u&&(t.success?o(t):a(t))})),n(e)("odo:data:"+t,{returnEvent:u,key:i,data:s})}))}},s=function(e,t){return function(i){return new Promise((function(s,o){var a="odo:data:getResponse:"+r();e.document.addEventListener("message",(function(e){var t=JSON.parse(e.detail);t.event===a&&(t.success?s(t):o(t))})),n(e)("odo:data:"+t,{returnEvent:a,key:i})}))}},o=function(e,t){return(o=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n])})(e,t)};function a(){for(var e=0,t=0,n=arguments.length;t<n;t++)e+=arguments[t].length;var r=Array(e),i=0;for(t=0;t<n;t++)for(var s=arguments[t],o=0,a=s.length;o<a;o++,i++)r[i]=s[o];return r}function u(){}function f(){f.init.call(this)}function l(e){return void 0===e._maxListeners?f.defaultMaxListeners:e._maxListeners}function v(e,t,n){if(t)e.call(n);else for(var r=e.length,i=w(e,r),s=0;s<r;++s)i[s].call(n)}function c(e,t,n,r){if(t)e.call(n,r);else for(var i=e.length,s=w(e,i),o=0;o<i;++o)s[o].call(n,r)}function d(e,t,n,r,i){if(t)e.call(n,r,i);else for(var s=e.length,o=w(e,s),a=0;a<s;++a)o[a].call(n,r,i)}function h(e,t,n,r,i,s){if(t)e.call(n,r,i,s);else for(var o=e.length,a=w(e,o),u=0;u<o;++u)a[u].call(n,r,i,s)}function p(e,t,n,r){if(t)e.apply(n,r);else for(var i=e.length,s=w(e,i),o=0;o<i;++o)s[o].apply(n,r)}function g(e,t,n,r){var i,s,o,a;if("function"!=typeof n)throw new TypeError('"listener" argument must be a function');if((s=e._events)?(s.newListener&&(e.emit("newListener",t,n.listener?n.listener:n),s=e._events),o=s[t]):(s=e._events=new u,e._eventsCount=0),o){if("function"==typeof o?o=s[t]=r?[n,o]:[o,n]:r?o.unshift(n):o.push(n),!o.warned&&(i=l(e))&&i>0&&o.length>i){o.warned=!0;var f=new Error("Possible EventEmitter memory leak detected. "+o.length+" "+t+" listeners added. Use emitter.setMaxListeners() to increase limit");f.name="MaxListenersExceededWarning",f.emitter=e,f.type=t,f.count=o.length,a=f,"function"==typeof console.warn?console.warn(a):console.log(a)}}else o=s[t]=n,++e._eventsCount;return e}function y(e,t,n){var r=!1;function i(){e.removeListener(t,i),r||(r=!0,n.apply(e,arguments))}return i.listener=n,i}function m(e){var t=this._events;if(t){var n=t[e];if("function"==typeof n)return 1;if(n)return n.length}return 0}function w(e,t){for(var n=new Array(t);t--;)n[t]=e[t];return n}u.prototype=Object.create(null),f.EventEmitter=f,f.usingDomains=!1,f.prototype.domain=void 0,f.prototype._events=void 0,f.prototype._maxListeners=void 0,f.defaultMaxListeners=10,f.init=function(){this.domain=null,f.usingDomains&&(void 0).active,this._events&&this._events!==Object.getPrototypeOf(this)._events||(this._events=new u,this._eventsCount=0),this._maxListeners=this._maxListeners||void 0},f.prototype.setMaxListeners=function(e){if("number"!=typeof e||e<0||isNaN(e))throw new TypeError('"n" argument must be a positive number');return this._maxListeners=e,this},f.prototype.getMaxListeners=function(){return l(this)},f.prototype.emit=function(e){var t,n,r,i,s,o,a,u="error"===e;if(o=this._events)u=u&&null==o.error;else if(!u)return!1;if(a=this.domain,u){if(t=arguments[1],!a){if(t instanceof Error)throw t;var f=new Error('Uncaught, unspecified "error" event. ('+t+")");throw f.context=t,f}return t||(t=new Error('Uncaught, unspecified "error" event')),t.domainEmitter=this,t.domain=a,t.domainThrown=!1,a.emit("error",t),!1}if(!(n=o[e]))return!1;var l="function"==typeof n;switch(r=arguments.length){case 1:v(n,l,this);break;case 2:c(n,l,this,arguments[1]);break;case 3:d(n,l,this,arguments[1],arguments[2]);break;case 4:h(n,l,this,arguments[1],arguments[2],arguments[3]);break;default:for(i=new Array(r-1),s=1;s<r;s++)i[s-1]=arguments[s];p(n,l,this,i)}return!0},f.prototype.addListener=function(e,t){return g(this,e,t,!1)},f.prototype.on=f.prototype.addListener,f.prototype.prependListener=function(e,t){return g(this,e,t,!0)},f.prototype.once=function(e,t){if("function"!=typeof t)throw new TypeError('"listener" argument must be a function');return this.on(e,y(this,e,t)),this},f.prototype.prependOnceListener=function(e,t){if("function"!=typeof t)throw new TypeError('"listener" argument must be a function');return this.prependListener(e,y(this,e,t)),this},f.prototype.removeListener=function(e,t){var n,r,i,s,o;if("function"!=typeof t)throw new TypeError('"listener" argument must be a function');if(!(r=this._events))return this;if(!(n=r[e]))return this;if(n===t||n.listener&&n.listener===t)0==--this._eventsCount?this._events=new u:(delete r[e],r.removeListener&&this.emit("removeListener",e,n.listener||t));else if("function"!=typeof n){for(i=-1,s=n.length;s-- >0;)if(n[s]===t||n[s].listener&&n[s].listener===t){o=n[s].listener,i=s;break}if(i<0)return this;if(1===n.length){if(n[0]=void 0,0==--this._eventsCount)return this._events=new u,this;delete r[e]}else!function(e,t){for(var n=t,r=n+1,i=e.length;r<i;n+=1,r+=1)e[n]=e[r];e.pop()}(n,i);r.removeListener&&this.emit("removeListener",e,o||t)}return this},f.prototype.removeAllListeners=function(e){var t,n;if(!(n=this._events))return this;if(!n.removeListener)return 0===arguments.length?(this._events=new u,this._eventsCount=0):n[e]&&(0==--this._eventsCount?this._events=new u:delete n[e]),this;if(0===arguments.length){for(var r,i=Object.keys(n),s=0;s<i.length;++s)"removeListener"!==(r=i[s])&&this.removeAllListeners(r);return this.removeAllListeners("removeListener"),this._events=new u,this._eventsCount=0,this}if("function"==typeof(t=n[e]))this.removeListener(e,t);else if(t)do{this.removeListener(e,t[t.length-1])}while(t[0]);return this},f.prototype.listeners=function(e){var t,n=this._events;return n&&(t=n[e])?"function"==typeof t?[t.listener||t]:function(e){for(var t=new Array(e.length),n=0;n<t.length;++n)t[n]=e[n].listener||e[n];return t}(t):[]},f.listenerCount=function(e,t){return"function"==typeof e.listenerCount?e.listenerCount(t):m.call(e,t)},f.prototype.listenerCount=m,f.prototype.eventNames=function(){return this._eventsCount>0?Reflect.ownKeys(this._events):[]};var L={start:"odo:event:start",restart:"odo:event:restart"},_=function(e){function t(t){var n=e.call(this)||this;return n.storage=t,n}return function(e,t){function n(){this.constructor=e}o(e,t),e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)}(t,e),t.prototype.on=function(e,t){return f.prototype.on.call(this,e.toString(),t),e===L.start&&this.storage.isStarted&&t(),this},t.prototype.off=function(e,t){return f.prototype.removeListener.call(this,e.toString(),t),this},t.prototype.emit=function(e){for(var t,n=[],r=1;r<arguments.length;r++)n[r-1]=arguments[r];var i=(t=f.prototype.emit).call.apply(t,a([this,e.toString()],n));return e===L.start&&(this.storage.isStarted=!0),i},t}(f),O=function(){this.isStarted=!1},E=function(){function e(e){var t=this;this.handleMessages=function(e){var n=JSON.parse(e.detail);switch(n.event){case"odo:data:save":t.save(n);break;case"odo:data:saveForPlayer":t.saveForPlayer(n);break;case"odo:data:get":t.get(n);break;case"odo:data:getForPlayer":t.getForPlayer(n)}},this.eventEmitter=e,this.eventEmitter.addListener("message",this.handleMessages)}return e.prototype.get=function(e){var t=window.localStorage.getItem(e.args.key);this.eventEmitter.emit("message",{detail:JSON.stringify({isODO:!0,success:!0,event:e.args.returnEvent,key:e.args.key,data:t})})},e.prototype.save=function(e){var t=window.localStorage.setItem(e.args.key,JSON.stringify(e.args.data));this.eventEmitter.emit("message",{detail:JSON.stringify({isODO:!0,success:!0,event:e.args.returnEvent,key:e.args.key,data:t})})},e.prototype.getForPlayer=function(e){var t=window.localStorage.getItem("player:"+e.args.key);this.eventEmitter.emit("message",{detail:JSON.stringify({isODO:!0,success:!0,event:e.args.returnEvent,key:e.args.key,data:t})})},e.prototype.saveForPlayer=function(e){var t=window.localStorage.setItem("player:"+e.args.key,JSON.stringify(e.args.data));this.eventEmitter.emit("message",{detail:JSON.stringify({isODO:!0,success:!0,event:e.args.returnEvent,key:e.args.key,data:t})})},e.prototype.destroy=function(){this.eventEmitter.removeListener("message",this.handleMessages)},e}(),b=L,k=t;e.Events=b,e.Triggers=k,e.init=function(e){var r,o,a,u=new O,f=new _(u),l=null!==(r=null==e?void 0:e.global)&&void 0!==r?r:{navigator:{userAgent:"n/a"},document:{addEventListener:f.on.bind(f),removeEventListener:f.removeListener.bind(f)},postMessage:function(n){var r=JSON.parse(n);r.event===t.ready&&f.emit(L.start,r.args),r.event===t.finish&&f.emit(L.restart,r.args),r.event.indexOf(":data:")>-1&&!v&&!0===(null==e?void 0:e.useLocalStorageInDev)&&f.emit("message",{detail:JSON.stringify(r)})}},v="undefined"==typeof window?l.navigator.userAgent.indexOf("odo")>-1:window.navigator.userAgent.indexOf("odo")>-1;function c(e){var t,n=JSON.parse(e.detail);null!==(t=n.isODO)&&void 0!==t&&t&&"string"==typeof n.event&&f.emit(n.event,n.args)}return"undefined"!=typeof window&&v&&(l=window),v||(u.isStarted=!0),v||!0!==(null==e?void 0:e.useLocalStorageInDev)||(o=new E(f)),l.document.addEventListener("message",c),{events:f,trigger:n(l),data:{save:i(l,"save"),saveForPlayer:i(l,"saveForPlayer"),get:s(l,"get"),getForPlayer:s(l,"getForPlayer")},track:(a=l,function(e,t){n(a)("odo:track",{key:e,data:t})}),destroy:function(){f.removeAllListeners(),l.document.removeEventListener("message",c),o&&o.destroy()},version:"1.0.0"}},Object.defineProperty(e,"__esModule",{value:!0})}));
+    })(null);
+
+    window.odo = ODO.init({ useLocalStorageInDev: true });
+    window.ODORestartEventTriggered = false;
+    window.ODOStartEventTriggered = false;
+    window.ODODataLoaded
+    odo.events.on(ODO.Events.start, () => {
+      window.ODOStartEventTriggered = true;
+    });
+    odo.events.on(ODO.Events.restart, () => {
+      window.ODORestartEventTriggered = true;
+    });
+
+		var engine = new Engine;
+		var setStatusMode;
+		var setStatusNotice;
+
+		(function() {
+
+			const EXECUTABLE_NAME = '$GODOT_BASENAME';
+			const MAIN_PACK = '$GODOT_BASENAME.pck';
+			const INDETERMINATE_STATUS_STEP_MS = 100;
+
+			var canvas = document.getElementById('canvas');
+			var statusProgress = document.getElementById('status-progress');
+			var statusProgressInner = document.getElementById('status-progress-inner');
+			var statusIndeterminate = document.getElementById('status-indeterminate');
+			var statusNotice = document.getElementById('status-notice');
+
+			var initializing = true;
+			var statusMode = 'hidden';
+
+			var animationCallbacks = [];
+			function animate(time) {
+				animationCallbacks.forEach(callback => callback(time));
+				requestAnimationFrame(animate);
+			}
+			requestAnimationFrame(animate);
+
+			function adjustCanvasDimensions() {
+				var scale = window.devicePixelRatio || 1;
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				canvas.width = width * scale;
+				canvas.height = height * scale;
+				canvas.style.width = width + "px";
+				canvas.style.height = height + "px";
+			}
+			animationCallbacks.push(adjustCanvasDimensions);
+			adjustCanvasDimensions();
+
+			setStatusMode = function setStatusMode(mode) {
+
+				if (statusMode === mode || !initializing)
+					return;
+				[statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+					elem.style.display = 'none';
+				});
+				animationCallbacks = animationCallbacks.filter(function(value) {
+					return (value != animateStatusIndeterminate);
+				});
+				switch (mode) {
+					case 'progress':
+						statusProgress.style.display = 'block';
+						break;
+					case 'indeterminate':
+						statusIndeterminate.style.display = 'block';
+						animationCallbacks.push(animateStatusIndeterminate);
+						break;
+					case 'notice':
+						statusNotice.style.display = 'block';
+						break;
+					case 'hidden':
+						break;
+					default:
+						throw new Error('Invalid status mode');
+				}
+				statusMode = mode;
+			}
+
+			function animateStatusIndeterminate(ms) {
+
+				var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
+				if (statusIndeterminate.children[i].style.borderTopColor == '') {
+					Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
+						child.style.borderTopColor = '';
+					});
+					statusIndeterminate.children[i].style.borderTopColor = '#dfdfdf';
+				}
+			}
+
+			setStatusNotice = function setStatusNotice(text) {
+
+				while (statusNotice.lastChild) {
+					statusNotice.removeChild(statusNotice.lastChild);
+				}
+				var lines = text.split('\n');
+				lines.forEach((line) => {
+					statusNotice.appendChild(document.createTextNode(line));
+					statusNotice.appendChild(document.createElement('br'));
+				});
+			};
+
+			engine.setProgressFunc((current, total) => {
+
+				if (total > 0) {
+					statusProgressInner.style.width = current/total * 100 + '%';
+					setStatusMode('progress');
+					if (current === total) {
+						// wait for progress bar animation
+						setTimeout(() => {
+							setStatusMode('indeterminate');
+						}, 500);
+					}
+				} else {
+					setStatusMode('indeterminate');
+				}
+			});
+
+			function displayFailureNotice(err) {
+				var msg = err.message || err;
+				console.error(msg);
+				setStatusNotice(msg);
+				setStatusMode('notice');
+				initializing = false;
+			};
+
+			if (!Engine.isWebGLAvailable()) {
+				displayFailureNotice('WebGL not available');
+			} else {
+				setStatusMode('indeterminate');
+				engine.setCanvas(canvas);
+				engine.startGame(EXECUTABLE_NAME, MAIN_PACK).then(() => {
+					setStatusMode('hidden');
+					initializing = false;
+          odo.trigger(ODO.Triggers.ready);
+				}, displayFailureNotice);
+			}
+		})();
+	//]]></script>
+</body>
+</html>
