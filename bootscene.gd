@@ -10,4 +10,4 @@ func _process(_delta):
 	var hasStarted = JavaScript.eval('window.ODOStartEventTriggered', true)
 	if hasStarted and not hasChangedToFirstScene:
 		hasChangedToFirstScene = true
-		assert(get_tree().change_scene('dungeon.tscn') == OK)
+		assert(get_tree().change_scene('mainscene.tscn') == OK)
