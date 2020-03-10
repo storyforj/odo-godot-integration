@@ -16,4 +16,10 @@ That's it!
 
 **Running**: Now you can click the "5" icon in the top right hand of the window to launch the game in a browser.
 
-**Note:** For an example of how to save and load data. Take a look at our ["saving/loading.gd"](https://github.com/storyforj/odo-godot-integration/blob/master/saving_loading.gd) script example
+## Saving/Loading Data
+
+For an example of how to save and load data. Take a look at our ["saving/loading.gd"](https://github.com/storyforj/odo-godot-integration/blob/master/saving_loading.gd) script example.
+
+## Handling Replays
+
+The ["mainscene.gd"](https://github.com/storyforj/odo-godot-integration/blob/master/mainscene.gd) file shows can pretty much be copied added as a "script node" for your main scene. It effectively waits for a "restart" event to be fired, and uses a "SHIFT + R" key press as an example "finish" event trigger.
